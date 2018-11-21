@@ -4,38 +4,25 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
-        histoTest(10,10, 5000, 5000);
-
-        /* int[][] distances = {
-                {
-                        0, 58, 184, 271, 378, 379
-                },
-                {
-                        58, 0, 167, 199, 351, 382
-                },
-                {
-                        184, 167, 0, 43, 374, 370
-                }
-        };
-
-        System.out.println(closestCity(distances));
-        */
+        histoTest(10, 10, 5000, 5000);
+        int histoProofArr[] = {1, 25, 11, 56, 72, 86, 42, 76, 20, 83};
+        System.out.println(histogram(histoProofArr));
     }
 
+    //Timing experiment for histogram algorithm.
     //testSize denotes how many times startSize will be incremented by jump.
     //startSize is the initial size of the test data.
     //jump is the amount the size of the test data changes with each increment in testSize.
     //noOfIterations denotes how many times to run each data set test.
     public static void histoTest(int testSize, int noOfIterations, int startSize, int jump) {
-        //Timing experiment for histogram algorithm.
-        //Input is generated randomly each time.
         for (int n = 0; n < testSize; n++) {
             long avgTime = 0;
             for (int i = 0; i < noOfIterations; i++) {
-                //Input size
+                //Test data size is calculated.
                 int[] number = new int[startSize + (jump * n)];
+                //Input is generated randomly each time.
                 Random rand = new Random();
-                //Generates appropriate testing input.
+                //Generates appropriate bounded testing input.
                 for (int j = 0; j < number.length; j++) {
                     number[j] = rand.nextInt((100 - 1) + 1) + 1;
                 }
@@ -45,12 +32,13 @@ public class Main {
                 //Timing stops after algorithm is complete and recorded time is added to avgTime.
                 avgTime += (System.nanoTime() - start);
             }
-            System.out.println(avgTime / 10);
+            //Calculates and then prints the average time taken for each iteration of the timing experiment.
+            System.out.println(avgTime / noOfIterations);
         }
     }
 
     //Currently O(n)
-    public static String histogram(int[] array) {
+    public static String histogram(int[] inputArray) {
         //Initialisation of histoLine array plus formatting entries
         String[] histoLine = new String[10];
         histoLine[0] = "\n   1-10: ";
@@ -64,56 +52,18 @@ public class Main {
         histoLine[8] = "\n81 - 90: ";
         histoLine[9] = "\n91- 100: ";
 
-        //Loop to add asterisks to histoLine
-        for (int i = 0; i < array.length; i++){
-            //Minus 1 from current array element and divide by 10 to find which array index to append asterisk.
-            histoLine[((array[i] - 1) / 10)] = histoLine[((array[i] - 1) / 10)] + "*";
+        //Loop to add asterisks to histoLine based on elements in array.
+        for (int i = 0; i < inputArray.length; i++) {
+            //Minus 1 from current inputArray element and divide by 10 to find which index of histoLine to append asterisk.
+            histoLine[((inputArray[i] - 1) / 10)] = histoLine[((inputArray[i] - 1) / 10)] + "*";
         }
-
-        /*
-        String[] histoLine = new String[10];
-        histoLine[0] = "\n   1-10: ";
-        histoLine[1] = "\n11 - 20: ";
-        histoLine[2] = "\n21 - 30: ";
-        histoLine[3] = "\n31 - 40: ";
-        histoLine[4] = "\n41 - 50: ";
-        histoLine[5] = "\n51 - 60: ";
-        histoLine[6] = "\n61 - 70: ";
-        histoLine[7] = "\n71 - 80: ";
-        histoLine[8] = "\n81 - 90: ";
-        histoLine[9] = "\n91- 100: ";
-        for (int i = 0; i < array.length; i++) {
-            histoLine[((array[i] - 1) / 10)] = histoLine[((array[i] - 1) / 10)].concat("*");
-        }
-       /* Below is the first implementation of the algorithm, however it was slow as the complexity was O(nlogn) + n.
-       for (int i = 0; i < array.length; i++) {
-            if (array[i] <= 10) {
-                histoLine[0] = histoLine[0].concat("*");
-            } else if (array[i] > 10 && array[i] <= 20) {
-                histoLine[1] = histoLine[1].concat("*");
-            } else if (array[i] > 20 && array[i] <= 30) {
-                histoLine[2] = histoLine[2].concat("*");
-            } else if (array[i] > 30 && array[i] <= 40) {
-                histoLine[3] = histoLine[3].concat("*");
-            } else if (array[i] > 40 && array[i] <= 50) {
-                histoLine[4] = histoLine[4].concat("*");
-            } else if (array[i] > 50 && array[i] <= 60) {
-                histoLine[5] = histoLine[5].concat("*");
-            } else if (array[i] > 60 && array[i] <= 70) {
-                histoLine[6] = histoLine[6].concat("*");
-            } else if (array[i] > 70 && array[i] <= 80) {
-                histoLine[7] = histoLine[7].concat("*");
-            } else if (array[i] > 80 && array[i] <= 90) {
-                histoLine[8] = histoLine[8].concat("*");
-            } else if (array[i] > 90 && array[i] <= 100) {
-                histoLine[9] = histoLine[9].concat("*");
-            }
-        } */
         return Arrays.toString(histoLine);
     }
 
     public static String closestCity(int[][] distanceMatrix) {
+        //Initialise return variable minDistance as an array of ints.
         int[] minDistance;
+        //Set minDistance size equal to the length of the distance matrix. (Each row has one minimum distance)
         minDistance = new int[distanceMatrix.length];
 
         for (int i = 0; i < distanceMatrix.length; i++) {
@@ -122,7 +72,7 @@ public class Main {
              This below if statement currently prevents an out of bounds exception from being thrown.
              Currently the temp variable needs to be assigned with a value related to the matrix.
              */
-            if (i == distanceMatrix.length-1) {
+            if (i == distanceMatrix.length - 1) {
                 temp = distanceMatrix[i][i - 1];
             } else {
                 temp = distanceMatrix[i][i + 1];
