@@ -1,34 +1,12 @@
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
-        /*
-        //Timing experiment for histogram algorithm.
-        long avgTime = 0;
-        //For each data set, the test is ran 100 times, each time recording nanoTime taken in avgTime.
-        //Input is generated randomly each time.
-        for (int j = 0; j < 100; j++) {
-            //Input size
-            int[] number = new int[700];
-            Random rand = new Random();
-            //Generates appropriate testing input.
-            for (int i = 0; i < number.length; i++) {
-                number[i] = rand.nextInt((100 - 1) + 1) + 1;
-            }
-            //Timing begins and algorithm is ran.
-            long start = System.nanoTime();
-            System.out.println(histogram(number));
-            //Timing stops after algorithm is complete and recorded time is added to avgTime.
-            avgTime += System.nanoTime() - start;
-        }
-        //The overall average is calculated.
-        System.out.println(avgTime/100); */
+        histoTest(10,10, 5000, 5000);
 
-        /* JASON'S EXAMPLE TABLE
-        int[][] distances = {
+        /* int[][] distances = {
                 {
                         0, 58, 184, 271, 378, 379
                 },
@@ -38,13 +16,61 @@ public class Main {
                 {
                         184, 167, 0, 43, 374, 370
                 }
-        }; */
+        };
 
-        System.out.println(closestCity(matrixHelper()));
+        System.out.println(closestCity(distances));
+        */
+    }
+
+    //testSize denotes how many times startSize will be incremented by jump.
+    //startSize is the initial size of the test data.
+    //jump is the amount the size of the test data changes with each increment in testSize.
+    //noOfIterations denotes how many times to run each data set test.
+    public static void histoTest(int testSize, int noOfIterations, int startSize, int jump) {
+        //Timing experiment for histogram algorithm.
+        //Input is generated randomly each time.
+        for (int n = 0; n < testSize; n++) {
+            long avgTime = 0;
+            for (int i = 0; i < noOfIterations; i++) {
+                //Input size
+                int[] number = new int[startSize + (jump * n)];
+                Random rand = new Random();
+                //Generates appropriate testing input.
+                for (int j = 0; j < number.length; j++) {
+                    number[j] = rand.nextInt((100 - 1) + 1) + 1;
+                }
+                //Timing begins and algorithm is ran.
+                long start = System.nanoTime();
+                histogram(number);
+                //Timing stops after algorithm is complete and recorded time is added to avgTime.
+                avgTime += (System.nanoTime() - start);
+            }
+            System.out.println(avgTime / 10);
+        }
     }
 
     //Currently O(n)
     public static String histogram(int[] array) {
+        //Initialisation of histoLine array plus formatting entries
+        String[] histoLine = new String[10];
+        histoLine[0] = "\n   1-10: ";
+        histoLine[1] = "\n11 - 20: ";
+        histoLine[2] = "\n21 - 30: ";
+        histoLine[3] = "\n31 - 40: ";
+        histoLine[4] = "\n41 - 50: ";
+        histoLine[5] = "\n51 - 60: ";
+        histoLine[6] = "\n61 - 70: ";
+        histoLine[7] = "\n71 - 80: ";
+        histoLine[8] = "\n81 - 90: ";
+        histoLine[9] = "\n91- 100: ";
+
+        //Loop to add asterisks to histoLine
+        for (int i = 0; i < array.length; i++){
+            //Minus 1 from current array element and divide by 10 to find which array index to append asterisk.
+            histoLine[((array[i] - 1) / 10)] = histoLine[((array[i] - 1) / 10)] + "*";
+        }
+
+        /*
         String[] histoLine = new String[10];
         histoLine[0] = "\n   1-10: ";
         histoLine[1] = "\n11 - 20: ";
@@ -111,8 +137,8 @@ public class Main {
         return Arrays.toString(minDistance);
     }
 
-    public static int[][] matrixHelper() {
-        final int size = 5;
+    //matrixHelper is an algorithm used to create a matrix of a specified size to be used by the distance
+    public static int[][] matrixHelper(final int size) {
         Random rand = new Random();
         int[][] matrix = new int[size][size];
         for (int i = 0; i < matrix.length; i++) {
