@@ -4,9 +4,12 @@ import java.util.Random;
 public class Main {
 
     public static void main(String[] args) {
+        /*
         histoTest(10, 10, 5000, 5000);
         int histoProofArr[] = {1, 25, 11, 56, 72, 86, 42, 76, 20, 83};
         System.out.println(histogram(histoProofArr));
+        */
+        closestCity(matrixHelper(5));
     }
 
     //Timing experiment for histogram algorithm.
@@ -77,7 +80,7 @@ public class Main {
             } else {
                 temp = distanceMatrix[i][i + 1];
             }
-            for (int j = 0; j < distanceMatrix[i].length; j++) {
+            for (int j = 0; j < distanceMatrix.length; j++) {
                 if (distanceMatrix[i][j] < temp && distanceMatrix[i][j] != 0) {
                     temp = distanceMatrix[i][j];
                 }
