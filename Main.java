@@ -9,11 +9,25 @@ public class Main {
         int histoProofArr[] = {1, 25, 11, 56, 72, 86, 42, 76, 20, 83};
         System.out.println(histogram(histoProofArr));
         */
-        closestCity(matrixHelper(5));
+        matrixTest(10,10,1000,1000);
+
+    }
+
+    public static void matrixTest(int testSize, int noOfIterations, int startSize, int jump){
+        for (int n=0; n < testSize; n++){
+            long avgTime = 0;
+            for (int i=0;i<noOfIterations; i++){
+                int testMatrix[][] = matrixHelper(startSize + (jump * n));
+                long start = System.nanoTime();
+                closestCity(testMatrix);
+                avgTime += (System.nanoTime() - start);
+            }
+            System.out.println(avgTime / noOfIterations);
+        }
     }
 
     //Timing experiment for histogram algorithm.
-    //testSize denotes how many times startSize will be incremented by jump.
+    //testSize denotes how many points of data are gathered.
     //startSize is the initial size of the test data.
     //jump is the amount the size of the test data changes with each increment in testSize.
     //noOfIterations denotes how many times to run each data set test.
