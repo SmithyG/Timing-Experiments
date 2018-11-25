@@ -108,12 +108,14 @@ public class Main {
     public static int[][] matrixHelper(final int size) {
         Random rand = new Random();
         int[][] matrix = new int[size][size];
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (j == i) {
+        for (int i = 0; i < matrix.length; i++){
+            for (int j = 0; j < matrix[i].length; j++){
+                int distance = rand.nextInt((500-1)+1)+1;
+                if (j == i){
                     matrix[i][j] = 0;
                 } else {
-                    matrix[i][j] = rand.nextInt((500 - 1) + 1) + 1;
+                    matrix[j][i] = distance;
+                    matrix[i][j] = distance;
                 }
             }
         }
