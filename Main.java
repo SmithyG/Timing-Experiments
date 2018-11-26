@@ -9,14 +9,16 @@ public class Main {
         int histoProofArr[] = {1, 25, 11, 56, 72, 86, 42, 76, 20, 83};
         System.out.println(histogram(histoProofArr));
         */
-        matrixTest(10,10,1000,1000);
-
+        //matrixTest(10, 10, 1000, 1000);
+        int testMatrix[][] = matrixHelper(3);
+        System.out.println(closestCity(testMatrix));
+        System.out.println(fasterClosestCity(testMatrix));
     }
 
-    public static void matrixTest(int testSize, int noOfIterations, int startSize, int jump){
-        for (int n=0; n < testSize; n++){
+    public static void matrixTest(int testSize, int noOfIterations, int startSize, int jump) {
+        for (int n = 0; n < testSize; n++) {
             long avgTime = 0;
-            for (int i=0;i<noOfIterations; i++){
+            for (int i = 0; i < noOfIterations; i++) {
                 int testMatrix[][] = matrixHelper(startSize + (jump * n));
                 long start = System.nanoTime();
                 closestCity(testMatrix);
@@ -83,23 +85,37 @@ public class Main {
         //Set minDistance size equal to the length of the distance matrix. (Each row has one minimum distance)
         minDistance = new int[distanceMatrix.length];
 
+        //Assign each minDistance with a max value. Necessary for comparison
+        for (int i = 0; i < minDistance.length; i++) {
+            minDistance[i] = Integer.MAX_VALUE;
+        }
         for (int i = 0; i < distanceMatrix.length; i++) {
-            int temp;
-            /*
-             This below if statement currently prevents an out of bounds exception from being thrown.
-             Currently the temp variable needs to be assigned with a value related to the matrix.
-             */
-            if (i == distanceMatrix.length - 1) {
-                temp = distanceMatrix[i][i - 1];
-            } else {
-                temp = distanceMatrix[i][i + 1];
-            }
             for (int j = 0; j < distanceMatrix.length; j++) {
-                if (distanceMatrix[i][j] < temp && distanceMatrix[i][j] != 0) {
-                    temp = distanceMatrix[i][j];
+                if (distanceMatrix[i][j] < minDistance[i] && distanceMatrix[i][j] != 0) {
+                    minDistance[i] = distanceMatrix[i][j];
                 }
             }
-            minDistance[i] = temp;
+        }
+        return Arrays.toString(minDistance);
+    }
+
+    public static String fasterClosestCity(int[][] distanceMatrix) {
+        int[] minDistance;
+        minDistance = new int[distanceMatrix.length];
+
+        //Assign each minDistance with a max value. Necessary for comparison
+        for (int i = 0; i < minDistance.length; i++) {
+            minDistance[i] = Integer.MAX_VALUE;
+        }
+        for (int i = 0; i < distanceMatrix.length; i++) {
+            for (int j = i + 1; j < distanceMatrix.length; j++) {
+                if (distanceMatrix[i][j] < minDistance[i]) {
+                    minDistance[i] = distanceMatrix[i][j];
+                }
+                if (distanceMatrix[i][j] < minDistance[j]) {
+                    minDistance[j] = distanceMatrix[i][j];
+                }
+            }
         }
         return Arrays.toString(minDistance);
     }
@@ -108,10 +124,10 @@ public class Main {
     public static int[][] matrixHelper(final int size) {
         Random rand = new Random();
         int[][] matrix = new int[size][size];
-        for (int i = 0; i < matrix.length; i++){
-            for (int j = 0; j < matrix[i].length; j++){
-                int distance = rand.nextInt((500-1)+1)+1;
-                if (j == i){
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                int distance = rand.nextInt((500 - 1) + 1) + 1;
+                if (j == i) {
                     matrix[i][j] = 0;
                 } else {
                     matrix[j][i] = distance;
