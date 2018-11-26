@@ -15,15 +15,24 @@ public class Main {
         System.out.println(fasterClosestCity(testMatrix));
     }
 
+    //matrixTest is a method designed to allow for timing experiments to be carried out based on parameters.
+    //testSize denotes how many points of data are gathered.
+    //startSize is the initial size of the test data.
+    //jump is the amount the size of the test data changes with each increment in testSize.
+    //noOfIterations denotes how many times to run each data set test.
     public static void matrixTest(int testSize, int noOfIterations, int startSize, int jump) {
         for (int n = 0; n < testSize; n++) {
             long avgTime = 0;
             for (int i = 0; i < noOfIterations; i++) {
+                //Creates a new randomly generated matrix according to parameters.
                 int testMatrix[][] = matrixHelper(startSize + (jump * n));
+                //Timing starts
                 long start = System.nanoTime();
                 closestCity(testMatrix);
+                //Timing stops and time taken is added to avgTime
                 avgTime += (System.nanoTime() - start);
             }
+            //Average time is calculated by dividing avgTime by the number of times the test in ran.
             System.out.println(avgTime / noOfIterations);
         }
     }
@@ -123,13 +132,17 @@ public class Main {
     //matrixHelper is an algorithm used to create a matrix of a specified size to be used by the distance
     public static int[][] matrixHelper(final int size) {
         Random rand = new Random();
+        //Initialise matrix of passed size.
         int[][] matrix = new int[size][size];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
+                //Generate a random int between 1 and 500
                 int distance = rand.nextInt((500 - 1) + 1) + 1;
                 if (j == i) {
+                    //Zero values where j=i
                     matrix[i][j] = 0;
                 } else {
+                    //Symmetrical assignments
                     matrix[j][i] = distance;
                     matrix[i][j] = distance;
                 }
