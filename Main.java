@@ -9,10 +9,12 @@ public class Main {
         int histoProofArr[] = {1, 25, 11, 56, 72, 86, 42, 76, 20, 83};
         System.out.println(histogram(histoProofArr));
         */
-        //matrixTest(10, 10, 1000, 1000);
-        int testMatrix[][] = matrixHelper(3);
-        System.out.println(closestCity(testMatrix));
-        System.out.println(fasterClosestCity(testMatrix));
+        closestCityTiming(10,100,1500,1500);
+        System.out.println("Second Test");
+        fasterClosestCityTiming(10,100,1500,1500);
+        //int testMatrix[][] = matrixHelper(3);
+        //System.out.println(closestCity(testMatrix));
+        //System.out.println(fasterClosestCity(testMatrix));
     }
 
     //matrixTest is a method designed to allow for timing experiments to be carried out based on parameters.
@@ -20,7 +22,29 @@ public class Main {
     //startSize is the initial size of the test data.
     //jump is the amount the size of the test data changes with each increment in testSize.
     //noOfIterations denotes how many times to run each data set test.
-    public static void matrixTest(int testSize, int noOfIterations, int startSize, int jump) {
+    public static void fasterClosestCityTiming(int testSize, int noOfIterations, int startSize, int jump) {
+        for (int n = 0; n < testSize; n++) {
+            long avgTime = 0;
+            for (int i = 0; i < noOfIterations; i++) {
+                //Creates a new randomly generated matrix according to parameters.
+                int testMatrix[][] = matrixHelper(startSize + (jump * n));
+                //Timing starts
+                long start = System.nanoTime();
+                fasterClosestCity(testMatrix);
+                //Timing stops and time taken is added to avgTime
+                avgTime += (System.nanoTime() - start);
+            }
+            //Average time is calculated by dividing avgTime by the number of times the test in ran.
+            System.out.println(avgTime / noOfIterations);
+        }
+    }
+
+    //matrixTest is a method designed to allow for timing experiments to be carried out based on parameters.
+    //testSize denotes how many points of data are gathered.
+    //startSize is the initial size of the test data.
+    //jump is the amount the size of the test data changes with each increment in testSize.
+    //noOfIterations denotes how many times to run each data set test.
+    public static void closestCityTiming(int testSize, int noOfIterations, int startSize, int jump) {
         for (int n = 0; n < testSize; n++) {
             long avgTime = 0;
             for (int i = 0; i < noOfIterations; i++) {
@@ -88,6 +112,7 @@ public class Main {
         return Arrays.toString(histoLine);
     }
 
+    //closestCity is a method that traverses a matrix passed to it to find the shortest distances between cities.
     public static String closestCity(int[][] distanceMatrix) {
         //Initialise return variable minDistance as an array of ints.
         int[] minDistance;
@@ -100,6 +125,8 @@ public class Main {
         }
         for (int i = 0; i < distanceMatrix.length; i++) {
             for (int j = 0; j < distanceMatrix.length; j++) {
+                //Check if the current element in distanceMatrix is greater than the current recorded shortest distance.
+                //And check if the current element is not zero
                 if (distanceMatrix[i][j] < minDistance[i] && distanceMatrix[i][j] != 0) {
                     minDistance[i] = distanceMatrix[i][j];
                 }
@@ -108,6 +135,8 @@ public class Main {
         return Arrays.toString(minDistance);
     }
 
+    //fasterClosestCity is a revised version of closestCity that makes use of the matrix being symmetrical.
+    //This means visiting all elements of the matrix is not required, resulting in theoretical faster execution.
     public static String fasterClosestCity(int[][] distanceMatrix) {
         int[] minDistance;
         minDistance = new int[distanceMatrix.length];
@@ -116,13 +145,15 @@ public class Main {
         for (int i = 0; i < minDistance.length; i++) {
             minDistance[i] = Integer.MAX_VALUE;
         }
+
         for (int i = 0; i < distanceMatrix.length; i++) {
             for (int j = i + 1; j < distanceMatrix.length; j++) {
-                if (distanceMatrix[i][j] < minDistance[i]) {
-                    minDistance[i] = distanceMatrix[i][j];
+                int currentElement = distanceMatrix[i][j];
+                if (currentElement < minDistance[i]) {
+                    minDistance[i] = currentElement;
                 }
-                if (distanceMatrix[i][j] < minDistance[j]) {
-                    minDistance[j] = distanceMatrix[i][j];
+                if (currentElement < minDistance[j]) {
+                    minDistance[j] = currentElement;
                 }
             }
         }
